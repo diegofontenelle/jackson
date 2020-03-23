@@ -3,6 +3,7 @@
 
 module.exports = {
   clearMocks: true,
+  collectCoverageFrom: ['src/**/*.js', '!src/**/*.style.js'],
   coverageThreshold: {
     global: {
       statements: 85,

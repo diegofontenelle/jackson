@@ -1,3 +1,7 @@
 {
-  "*.js": ["eslint --fix", "git add", "jest --findRelatedTests --coverage"]
+  "src/**/*.js": [
+    "eslint --fix",
+    "git add",
+    "jest --env=jsdom --findRelatedTests --coverage"
+  ]
 }

@@ -9,18 +9,22 @@ import UncategorizedIcon from '@material-ui/icons/CreditCard'
 export default function Category({ category }) {
   switch (category) {
     case 'food':
-      return <FoodIcon />
+      return <FoodIcon data-testid="food-icon" />
     case 'fun':
-      return <BeachIcon />
+      return <BeachIcon data-testid="fun-icon" />
     case 'work':
-      return <WorkIcon />
+      return <WorkIcon data-testid="work-icon" />
     case 'transport':
-      return <TransportIcon />
+      return <TransportIcon data-testid="transport-icon" />
     default:
-      return <UncategorizedIcon />
+      return <UncategorizedIcon data-testid="uncategorized-icon" />
   }
 }
 
 Category.propTypes = {
-  category: PropTypes.oneOf(['food', 'fun', 'work', 'transport']).isRequired,
+  category: PropTypes.oneOf(['food', 'fun', 'work', 'transport', '']),
+}
+
+Category.defaultProps = {
+  category: '',
 }

@@ -20,7 +20,8 @@
     "lint:fix": "eslint src --fix && echo \"eslint: no lint errors\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage --collectCoverageFrom='[\"src/**/*.js\", \"!src/**/*.style.js\", \"!src/**/**/index.js\", \"!src/**/**/__*.js\"]'",
+    "test:staged": "cross-env CI=true react-scripts test --findRelatedTests",
     "eject": "react-scripts eject"
   },
   "husky": {
@@ -44,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.0",
