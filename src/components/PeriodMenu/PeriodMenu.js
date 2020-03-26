@@ -4,6 +4,19 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 export default function PeriodMenu({ anchorEl, handleClose, callback }) {
+  const date = new Date()
+  const week = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)
+  const biweek = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() - 15
+  )
+  const month = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() - 30
+  )
+
   function handleClick(value) {
     callback(value)
     handleClose()
@@ -18,9 +31,9 @@ export default function PeriodMenu({ anchorEl, handleClose, callback }) {
       onClose={handleClose}
     >
       <MenuItem onClick={() => handleClick('all')}>Tudo</MenuItem>
-      <MenuItem onClick={() => handleClick('week')}>7 dias</MenuItem>
-      <MenuItem onClick={() => handleClick('biweekly')}>15 dias</MenuItem>
-      <MenuItem onClick={() => handleClick('month')}>30 dias</MenuItem>
+      <MenuItem onClick={() => handleClick(week)}>7 dias</MenuItem>
+      <MenuItem onClick={() => handleClick(biweek)}>15 dias</MenuItem>
+      <MenuItem onClick={() => handleClick(month)}>30 dias</MenuItem>
     </Menu>
   )
 }

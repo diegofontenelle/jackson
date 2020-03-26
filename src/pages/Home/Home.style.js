@@ -2,7 +2,7 @@ export default function (theme) {
   return {
     container: {
       display: 'grid',
-      gridTeamplateRows: '12.5% 12.5% 75%',
+      gridTemplateRows: '100px 20% 70%',
       gridTemplateAreas: `'filters' 'filterData' 'entries'`,
       height: '100%',
       minHeight: '100%',
@@ -12,18 +12,15 @@ export default function (theme) {
       gridArea: 'filters',
     },
 
-    filterData: {
-      gridArea: 'filterData',
-    },
-
     entries: {
       gridArea: 'entries',
+      margin: `${theme.spacing(2)}px 0`,
     },
 
     fab: {
       position: 'fixed',
-      bottom: theme.spacing(1),
-      right: theme.spacing(1),
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
     },
   }
 }

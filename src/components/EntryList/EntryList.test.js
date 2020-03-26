@@ -1,16 +1,28 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import EntryList from '.'
+import { AuthContext } from '../../contexts/AuthContext'
+
+const EntriesWithContext = (props) => {
+  return (
+    <AuthContext.Provider
+      value={{ currentUser: { uid: '1234' } }}
+      currentUser={{ uid: '1234' }}
+    >
+      <EntryList {...props} />
+    </AuthContext.Provider>
+  )
+}
 
 describe('<EntryList />', () => {
   it('should render empty state', () => {
-    const { getByTestId } = render(<EntryList />)
+    const { getByTestId } = render(<EntriesWithContext entries={[]} />)
 
     expect(getByTestId('empty-state')).toBeDefined()
   })
   it('should render a list of entries', () => {
     const { getByText } = render(
-      <EntryList
+      <EntriesWithContext
         entries={[
           {
             id: 1,
@@ -28,7 +40,7 @@ describe('<EntryList />', () => {
   })
   it('should render a entry with credit styling', () => {
     const { getByText } = render(
-      <EntryList
+      <EntriesWithContext
         entries={[
           {
             id: 1,

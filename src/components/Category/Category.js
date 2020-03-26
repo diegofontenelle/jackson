@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import FoodIcon from '@material-ui/icons/EmojiFoodBeverage'
 import BeachIcon from '@material-ui/icons/BeachAccess'
-import WorkIcon from '@material-ui/icons/Work'
+import FoodIcon from '@material-ui/icons/EmojiFoodBeverage'
+import StudyIcon from '@material-ui/icons/Book'
 import TransportIcon from '@material-ui/icons/Commute'
 import UncategorizedIcon from '@material-ui/icons/CreditCard'
+import WorkIcon from '@material-ui/icons/Work'
 
 export default function Category({ category }) {
   switch (category) {
@@ -14,6 +15,8 @@ export default function Category({ category }) {
       return <BeachIcon data-testid="fun-icon" />
     case 'work':
       return <WorkIcon data-testid="work-icon" />
+    case 'study':
+      return <StudyIcon data-testid="study-icon" />
     case 'transport':
       return <TransportIcon data-testid="transport-icon" />
     default:
@@ -22,7 +25,14 @@ export default function Category({ category }) {
 }
 
 Category.propTypes = {
-  category: PropTypes.oneOf(['food', 'fun', 'work', 'transport', '']),
+  category: PropTypes.oneOf([
+    'food',
+    'fun',
+    'study',
+    'transport',
+    'work',
+    'uncategorized',
+  ]),
 }
 
 Category.defaultProps = {

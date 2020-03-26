@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import Box from '@material-ui/core/Box'
 import List from '@material-ui/core/List'
@@ -6,17 +6,28 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import Avatar from '@material-ui/core/Avatar'
-import { makeStyles, Typography } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core'
 import Category from '../Category'
 import style from './EntryList.style'
 import formatDateToText from '../../shared/utils/date/formatDateToText'
+import { AuthContext } from '../../contexts/AuthContext'
 
 const useStyles = makeStyles(style)
 
 export default function EntryList({ entries, ...rest }) {
   const classes = useStyles()
+  const { currentUser } = useContext(AuthContext)
 
-  if (entries.length === 0)
+  if (!currentUser)
+    return (
+      <Box display="flex" justifyContent="center">
+        <CircularProgress />
+      </Box>
+    )
+
+  if (Array.isArray(entries) && entries.length === 0)
     return (
       <Typography variant="subtitle1" align="center" data-testid="empty-state">
         <Box color="text.secondary">
@@ -39,7 +50,7 @@ export default function EntryList({ entries, ...rest }) {
             secondary={
               <Box
                 component="span"
-                color={type === 'debit' ? 'error.main' : 'success.main'}
+                color={type === 'credit' ? 'success.main' : 'error.main'}
                 className={classes.secondaryText}
               >
                 R$ {amount}{' '}
@@ -56,9 +67,5 @@ export default function EntryList({ entries, ...rest }) {
 }
 
 EntryList.propTypes = {
-  entries: PropTypes.arrayOf(PropTypes.shape),
-}
-
-EntryList.defaultProps = {
-  entries: [],
+  entries: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
