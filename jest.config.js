@@ -4,6 +4,7 @@
 module.exports = {
   clearMocks: true,
   collectCoverageFrom: ['src/**/*.js', '!src/**/*.style.js'],
+  testPathIgnorePatterns: ['!src/contexts/'],
   coverageThreshold: {
     global: {
       statements: 85,
