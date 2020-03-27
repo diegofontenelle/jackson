@@ -3,11 +3,33 @@
 
 module.exports = {
   clearMocks: true,
-  collectCoverageFrom: ['src/**/*.js', '!src/**/*.style.js'],
-  testPathIgnorePatterns: ['!src/contexts/'],
+  collectCoverage: true,
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/index.js',
+    '!src/**/*.style.js',
+  ],
+  coveragePathIgnorePatterns: [
+    'src/contexts',
+    'src/routes',
+    'src/shared/hooks',
+    'src/shared/utils/testHelpers',
+    'src/*.js',
+    '<rootDir>/src/*/*.style.js',
+    'index.js',
+  ],
+  testPathIgnorePatterns: [
+    'src/contexts',
+    'src/routes',
+    'src/shared/hooks',
+    'src/shared/utils/testHelpers',
+    '<rootDir>/src/*.js',
+    '<rootDir>/src/*/*.style.js',
+    'index.js',
+  ],
   coverageThreshold: {
     global: {
-      statements: 85,
+      statements: -10,
       branches: 85,
       functions: 85,
       lines: 85,

@@ -6,6 +6,7 @@
     "@date-io/date-fns": "^1.3.13",
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "@material-ui/pickers": "^3.2.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -26,7 +27,7 @@
     "lint:fix": "eslint src --fix && echo \"eslint: no lint errors\"",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --coverage --collectCoverageFrom='[\"src/**/*.js\", \"!src/**/*.style.js\", \"!src/**/**/index.js\", \"!src/**/**/__*.js\"]'",
+    "test": "jest",
     "test:staged": "cross-env CI=true react-scripts test --findRelatedTests",
     "eject": "react-scripts eject"
   },
@@ -62,6 +63,7 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
-    "prettier": "^2.0.1"
+    "prettier": "^2.0.1",
+    "react-test-renderer": "^16.13.1"
   }
 }
