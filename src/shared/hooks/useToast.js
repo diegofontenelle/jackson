@@ -11,7 +11,8 @@ export default function useToast() {
   )
 
   const error = useCallback(
-    (message) =>
+    (message) => {
+      console.log(message)
       dispatch({
         type: 'error',
         payload: {
@@ -21,7 +22,8 @@ export default function useToast() {
               : message,
           severity: 'error',
         },
-      }),
+      })
+    },
     [dispatch]
   )
 
