@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import AddEntryForm from './Form'
-import app, { db } from '../../firebase'
+import { db } from '../../firebase'
+import useToast from '../../shared/hooks/useToast'
+import { AuthContext } from '../../contexts/AuthContext'
 
 export default function AddEntry({ callback, onClose, open }) {
+  const { error, success } = useToast()
+  const { currentUser } = useContext(AuthContext)
+
   function handleSubmit({ amount, category, date, title, type }) {
     const uid = new Date().getTime().toString()
 
     db.collection('entry')
-      .doc(app.auth().currentUser.uid.toString())
+      .doc(currentUser.uid.toString())
       .collection('entries')
       .doc(uid)
       .set({
@@ -25,10 +30,11 @@ export default function AddEntry({ callback, onClose, open }) {
         type,
       })
       .then(() => {
+        success('Novo registro adicionado!')
         callback()
         onClose()
       })
-      .catch((error) => alert(error))
+      .catch((err) => error(err))
   }
 
   return (
@@ -60,6 +66,7 @@ export default function AddEntry({ callback, onClose, open }) {
               'uncategorized',
             ])
             .required('Escolha uma categoria'),
+          title: Yup.string().required('Obrigatório'),
         })}
       >
         {(formikProps) => (

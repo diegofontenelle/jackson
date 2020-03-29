@@ -29,22 +29,20 @@ export default function Filters({
     >
       <ButtonGroup>
         <Button
-          onClick={(event) => setCategoryAnchor(event.currentTarget)}
           data-testid="category"
+          onClick={(event) => setCategoryAnchor(event.currentTarget)}
         >
           <Box color="text.secondary">Categoria</Box>
         </Button>
 
         <Button
-          onClick={(event) => setPeriodAnchor(event.currentTarget)}
           data-testid="period"
+          onClick={(event) => setPeriodAnchor(event.currentTarget)}
         >
           <Box color="text.secondary">Período</Box>
         </Button>
-        <Button>
-          <Box color="text.secondary" onClick={callbackReset}>
-            Resetar
-          </Box>
+        <Button data-testid="reset-filters" onClick={callbackReset}>
+          <Box color="text.secondary">Resetar</Box>
         </Button>
       </ButtonGroup>
 

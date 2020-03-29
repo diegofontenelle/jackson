@@ -32,6 +32,7 @@ Category.propTypes = {
     'transport',
     'work',
     'uncategorized',
+    '',
   ]),
 }
 

@@ -10,6 +10,7 @@ import app from '../../firebase'
 import style from './Login.style'
 import SignInDialog from '../../components/SignInDialog/SignInDialog'
 import { AuthContext } from '../../contexts/AuthContext'
+import useToast from '../../shared/hooks/useToast'
 
 const useStyles = makeStyles(style)
 
@@ -17,6 +18,7 @@ export default function Login({ history }) {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const { currentUser } = useContext(AuthContext)
+  const { error } = useToast()
 
   const handleSubmit = useCallback(
     async ({ email, password }) => {
@@ -24,12 +26,14 @@ export default function Login({ history }) {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => history.push('/home'))
-        .catch((error) => alert(error))
+        .catch(() => error('Usuário ou senha incorretos.'))
     },
-    [history]
+    [error, history]
   )
 
-  useEffect(() => history.push('/home'), [currentUser])
+  useEffect(() => {
+    if (currentUser) history.push('/home')
+  }, [currentUser, history])
 
   return (
     <Container className={classes.container}>
@@ -52,37 +56,40 @@ export default function Login({ history }) {
         }) => (
           <Form onSubmit={onSubmit}>
             <TextField
+              error={touched.email && Boolean(errors.email)}
+              fullWidth
+              helperText={touched.email ? errors.email : ''}
               label="E-mail"
+              name="email"
+              onBlur={handleBlur}
+              onChange={handleChange}
               placeholder="E-mail"
               type="email"
-              name="email"
-              fullWidth
-              onBlur={handleBlur}
-              onChange={handleChange}
-              helperText={errors.email}
-              error={touched.email && Boolean(errors.email)}
             />
             <TextField
-              label="Senha"
-              type="password"
-              name="password"
+              error={touched.password && Boolean(errors.password)}
               fullWidth
+              helperText={touched.password ? errors.password : ''}
+              label="Senha"
+              name="password"
               onBlur={handleBlur}
               onChange={handleChange}
-              helperText={errors.password}
-              error={touched.password && Boolean(errors.password)}
+              placeholder="Senha"
+              type="password"
             />
             <Button
               className={classes.button}
-              variant="contained"
               color="primary"
+              data-testid="login-submit"
               fullWidth
               type="submit"
+              variant="contained"
             >
               Entrar
             </Button>
             <Button
               className={classes.button}
+              data-testid="signin-button"
               fullWidth
               onClick={() => setOpen(true)}
             >
@@ -91,7 +98,11 @@ export default function Login({ history }) {
           </Form>
         )}
       </Formik>
-      <SignInDialog open={open} handleClose={() => setOpen(false)} />
+      <SignInDialog
+        handleClose={() => setOpen(false)}
+        history={history}
+        open={open}
+      />
     </Container>
   )
 }

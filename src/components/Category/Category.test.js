@@ -18,6 +18,13 @@ describe('<Category />', () => {
 
     expect(getByTestId('fun-icon')).toBeDefined()
   })
+
+  it('should return StudyIcon for category="study"', () => {
+    const { getByTestId } = render(<Category category="study" />)
+
+    expect(getByTestId('study-icon')).toBeDefined()
+  })
+
   it('should return WorkIcon for category="work"', () => {
     const { getByTestId } = render(<Category category="work" />)
 

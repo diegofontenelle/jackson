@@ -6,7 +6,13 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers'
 
-export default function DatePicker({ label, name, setFieldValue, value }) {
+export default function DatePicker({
+  label,
+  name,
+  setFieldValue,
+  value,
+  ...rest
+}) {
   const handleChange = useCallback(
     (date) => {
       setFieldValue(name, date)
@@ -17,9 +23,13 @@ export default function DatePicker({ label, name, setFieldValue, value }) {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
+        disableFuture
         format="dd/MM/yyyy"
         fullWidth
         id="date-picker-dialog"
+        inputProps={{
+          ...rest,
+        }}
         KeyboardButtonProps={{
           'aria-label': 'change date',
         }}

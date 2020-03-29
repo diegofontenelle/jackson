@@ -12,15 +12,15 @@ import { makeStyles } from '@material-ui/core'
 import Category from '../Category'
 import style from './EntryList.style'
 import formatDateToText from '../../shared/utils/date/formatDateToText'
-import { AuthContext } from '../../contexts/AuthContext'
+import { LoadingContext } from '../../contexts/LoadingContext'
 
 const useStyles = makeStyles(style)
 
 export default function EntryList({ entries, ...rest }) {
   const classes = useStyles()
-  const { currentUser } = useContext(AuthContext)
+  const { loading } = useContext(LoadingContext)
 
-  if (!currentUser)
+  if (loading)
     return (
       <Box display="flex" justifyContent="center">
         <CircularProgress />

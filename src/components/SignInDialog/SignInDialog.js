@@ -6,17 +6,19 @@ import Container from '@material-ui/core/Container'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
 import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { makeStyles } from '@material-ui/core'
-import { Redirect } from 'react-router-dom'
 import style from './SignInDialog.style'
 import app from '../../firebase'
+import useToast from '../../shared/hooks/useToast'
 
 const useStyles = makeStyles(style)
 
-export default function SignInDialog({ handleClose, open }) {
+export default function SignInDialog({ handleClose, history, open }) {
   const classes = useStyles()
+  const { error } = useToast()
 
   const handleSubmit = useCallback(async ({ email, password }) => {
     app
@@ -26,15 +28,22 @@ export default function SignInDialog({ handleClose, open }) {
         app
           .auth()
           .signInWithEmailAndPassword(email, password)
-          .then(() => <Redirect to="/home" />)
-          .catch((error) => alert(error))
+          .then(() => history.push('home'))
+          .catch((err) => error(err))
       )
-      .catch((error) => alert(error))
+      .catch((err) => error(err))
   }, [])
 
   return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle id="signIn">Quase lá!</DialogTitle>
+    <Dialog data-testid="signin-dialog" onClose={handleClose} open={open}>
+      <DialogTitle id="signIn">
+        Quase lá!{' '}
+        <Typography variant="body2">
+          <Box component="span" color="text.secondary">
+            Digite seu e-mail e escolha uma senha para começar a acessar
+          </Box>
+        </Typography>
+      </DialogTitle>
       <Container>
         <Formik
           initialValues={{ email: '', password: '' }}
@@ -55,41 +64,49 @@ export default function SignInDialog({ handleClose, open }) {
           }) => (
             <Form onSubmit={_handleSubmit} noValidate>
               <TextField
+                error={touched.email && Boolean(errors.email)}
+                fullWidth
+                helperText={errors.email}
+                inputProps={{
+                  'data-testid': 'signin-email',
+                }}
                 label="E-mail"
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="E-mail"
                 type="email"
-                name="email"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                helperText={errors.email}
-                error={touched.email && Boolean(errors.email)}
               />
               <TextField
-                label="Senha"
-                placeholder="Senha"
-                type="password"
-                name="password"
+                error={touched.password && Boolean(errors.password)}
                 fullWidth
+                helperText={errors.password}
+                inputProps={{
+                  'data-testid': 'signin-password',
+                }}
+                label="Senha"
+                name="password"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                helperText={errors.password}
-                error={touched.password && Boolean(errors.password)}
+                placeholder="Senha"
+                type="password"
               />
               <Button
                 className={classes.button}
-                variant="contained"
                 color="primary"
+                data-testid="signin-submit"
                 fullWidth
+                variant="contained"
                 type="submit"
               >
                 Cadastrar
               </Button>
               <Button
-                variant="text"
                 className={classes.button}
-                onClick={handleClose}
+                data-testid="signin-dialog-back"
                 fullWidth
+                onClick={handleClose}
+                variant="text"
               >
                 <Box color="text.secondary">Voltar</Box>
               </Button>
@@ -103,6 +120,7 @@ export default function SignInDialog({ handleClose, open }) {
 
 SignInDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
   open: PropTypes.bool,
 }
 

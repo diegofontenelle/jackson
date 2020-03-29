@@ -26,15 +26,18 @@ export default function AddEntryForm({
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
-              label="Título"
-              name="title"
-              onBlur={handleBlur}
-              onChange={handleChange}
+              error={touched.title && Boolean(errors.title)}
               fullWidth
               helperText={
                 touched.title && Boolean(errors.title) ? errors.title : ''
               }
-              error={touched.title && Boolean(errors.title)}
+              inputProps={{
+                'data-testid': 'title-input',
+              }}
+              label="Título"
+              name="title"
+              onBlur={handleBlur}
+              onChange={handleChange}
             />
           </Grid>
           <Grid item xs={6}>
@@ -45,6 +48,9 @@ export default function AddEntryForm({
                 touched.amount && Boolean(errors.amount) ? errors.amount : ''
               }
               label="Valor (R$)"
+              inputProps={{
+                'data-testid': 'amount-input',
+              }}
               name="amount"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -55,6 +61,13 @@ export default function AddEntryForm({
               error={touched.category && Boolean(errors.category)}
               fullWidth
               helperText={errors.category}
+              SelectProps={{
+                id: '123',
+                'data-testid': 'category-select',
+              }}
+              inputProps={{
+                'data-testid': 'category-input',
+              }}
               label="Categoria"
               name="category"
               onBlur={handleBlur}
@@ -75,6 +88,9 @@ export default function AddEntryForm({
               error={touched.type && Boolean(errors.type)}
               fullWidth
               helperText={errors.type}
+              inputProps={{
+                'data-testid': 'type-select',
+              }}
               label="Tipo"
               name="type"
               onBlur={handleBlur}
@@ -88,6 +104,7 @@ export default function AddEntryForm({
           </Grid>
           <Grid item xs={12}>
             <DatePicker
+              data-testid="date-input"
               setFieldValue={setFieldValue}
               name="date"
               label="Data"
@@ -102,12 +119,18 @@ export default function AddEntryForm({
               fullWidth
               type="submit"
               disabled={isSubmitting}
+              data-testid="submit-add-entry"
             >
               {isSubmitting ? <CircularProgress /> : 'ADICIONAR'}
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <Button fullWidth onClick={handleClose} size="large">
+            <Button
+              data-testid="add-entry-back"
+              fullWidth
+              onClick={handleClose}
+              size="large"
+            >
               VOLTAR
             </Button>
           </Grid>

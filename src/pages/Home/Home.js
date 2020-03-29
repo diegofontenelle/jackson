@@ -16,6 +16,7 @@ import { db } from '../../firebase'
 import { AuthContext } from '../../contexts/AuthContext'
 import FilterData from '../../components/FilterData/FilterData'
 import useLoading from '../../shared/hooks/useLoading'
+import useToast from '../../shared/hooks/useToast'
 
 const useStyles = makeStyles((theme) => style(theme))
 
@@ -28,7 +29,7 @@ const reducer = (state, action) => {
     case 'data':
       return { ...state, data: action.payload.data }
     default:
-      return state
+      throw new Error(`Unhandled action type: ${action.type}`)
   }
 }
 
@@ -41,9 +42,34 @@ export default function Home() {
     data: [],
   })
   const { currentUser } = useContext(AuthContext)
+  const { error } = useToast()
   const { showLoading, hideLoading } = useLoading()
 
   const hydrate = (doc) => ({ ...doc.data(), date: new Date(doc.data().date) })
+
+  const queryEntries = useCallback((key, selector, value) => {
+    if (currentUser) {
+      showLoading()
+      return db
+        .collection('entry')
+        .doc(currentUser.uid)
+        .collection('entries')
+        .where(key, selector, value)
+    }
+
+    return null
+  })
+
+  const callbackSuccess = useCallback(
+    (snapshot) => {
+      let data = []
+
+      if (!snapshot.empty) data = snapshot.docs.map((doc) => hydrate(doc))
+
+      dispatch({ type: 'data', payload: { data } })
+    },
+    [dispatch]
+  )
 
   const fetchEntries = useCallback(() => {
     if (currentUser) {
@@ -61,52 +87,38 @@ export default function Home() {
             },
           })
         })
+        .catch((err) => error(err))
         .finally(hideLoading)
     }
-  }, [currentUser])
+  }, [currentUser, error, hideLoading, showLoading])
 
   useEffect(() => {
     if (state.category === 'all') fetchEntries()
 
     if (currentUser && state.category !== 'all') {
       showLoading()
-      db.collection('entry')
-        .doc(currentUser.uid)
-        .collection('entries')
-        .where('category', '==', state.category)
+      queryEntries('category', '==', state.category)
+        .orderBy('queryDate', 'desc')
         .get()
-        .then((snapshot) => {
-          let data = []
-          if (!snapshot.empty) data = snapshot.docs.map((doc) => hydrate(doc))
-
-          dispatch({ type: 'data', payload: { data } })
-        })
-        .catch((error) => alert(error))
+        .then(callbackSuccess)
+        .catch((err) => error(err))
         .finally(hideLoading)
     }
-  }, [state.category, currentUser])
-
-  useEffect(() => fetchEntries(), [currentUser])
+  }, [currentUser, error, hideLoading, showLoading, state.category])
 
   useEffect(() => {
     if (state.period === 'all') fetchEntries()
+
     if (currentUser && state.period !== 'all') {
       showLoading()
-      db.collection('entry')
-        .doc(currentUser.uid)
-        .collection('entries')
-        .where('queryDate', '>=', state.period)
+      queryEntries('queryDate', '>=', state.period)
         .orderBy('queryDate', 'desc')
         .get()
-        .then((snapshot) => {
-          let data = []
-          if (!snapshot.empty) data = snapshot.docs.map((doc) => hydrate(doc))
-          dispatch({ type: 'data', payload: { data } })
-        })
-        .catch((error) => alert(error))
+        .then(callbackSuccess)
+        .catch((err) => error(err))
         .finally(hideLoading)
     }
-  }, [state.period])
+  }, [currentUser, error, hideLoading, showLoading, state.period])
 
   const callbackCategory = useCallback(
     (category) => dispatch({ type: 'change_category', payload: { category } }),
@@ -138,9 +150,9 @@ export default function Home() {
         <AddIcon />
       </Fab>
       <AddEntry
-        open={showDialog}
         callback={fetchEntries}
         onClose={() => setShowDialog(false)}
+        open={showDialog}
       />
     </div>
   )

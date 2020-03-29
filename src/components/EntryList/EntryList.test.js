@@ -1,16 +1,13 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import EntryList from '.'
-import { AuthContext } from '../../contexts/AuthContext'
+import TestContextWrapper from '../../shared/utils/testHelpers/testWrapper'
 
 const EntriesWithContext = (props) => {
   return (
-    <AuthContext.Provider
-      value={{ currentUser: { uid: '1234' } }}
-      currentUser={{ uid: '1234' }}
-    >
+    <TestContextWrapper>
       <EntryList {...props} />
-    </AuthContext.Provider>
+    </TestContextWrapper>
   )
 }
 
