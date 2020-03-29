@@ -2,6 +2,6 @@
   "src/**/*.js": [
     "eslint --fix",
     "git add",
-    "cross-env CI=true react-scripts test --findRelatedTests"
+    "cross-env CI=true jest --findRelatedTests"
   ]
 }

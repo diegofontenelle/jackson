@@ -8,6 +8,7 @@ module.exports = {
     'src/**/*.js',
     '!src/**/index.js',
     '!src/**/*.style.js',
+    '!src/App.js',
   ],
   coveragePathIgnorePatterns: [
     'src/contexts',
@@ -19,6 +20,8 @@ module.exports = {
     'index.js',
   ],
   testPathIgnorePatterns: [
+    'src/App.js',
+    'serc/firebase.js',
     'src/contexts',
     'src/routes',
     'src/shared/hooks',
@@ -27,12 +30,5 @@ module.exports = {
     '<rootDir>/src/*/*.style.js',
     'index.js',
   ],
-  coverageThreshold: {
-    global: {
-      statements: -10,
-      branches: 85,
-      functions: 85,
-      lines: 85,
-    },
-  },
+  setupFilesAfterEnv: ['./setupTests.js', './__mocks__/firebase.js'],
 }
