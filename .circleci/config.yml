@@ -14,5 +14,5 @@ jobs:
           command: |
             echo "deploying to development environment"
             docker build -t jackson:prod .
-            docker tag diegofontenelle/jackson:prod
+            docker tag jackson:prod diegofontenelle/jackson:prod
             docker push diegofontenelle/jackson:prod
