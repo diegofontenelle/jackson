@@ -9,6 +9,7 @@ import AuthProvider from './contexts/AuthContext'
 import LoadingProvider from './contexts/LoadingContext'
 import ToastProvider from './contexts/ToastContext'
 import Toast from './components/Toast/Toast'
+import ErrorBoundary from './components/ErrorBoundary'
 
 const useStyles = makeStyles(style)
 
@@ -53,7 +54,9 @@ function App() {
       <LoadingProvider loading={loading} setLoading={setLoading}>
         <ToastProvider state={state} dispatch={dispatch}>
           <AuthProvider>
-            <Router />
+            <ErrorBoundary>
+              <Router />
+            </ErrorBoundary>
           </AuthProvider>
         </ToastProvider>
       </LoadingProvider>

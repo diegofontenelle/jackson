@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import { TextField, makeStyles } from '@material-ui/core'
 import { Formik, Form } from 'formik'
@@ -11,6 +12,7 @@ import style from './Login.style'
 import SignInDialog from '../../components/SignInDialog/SignInDialog'
 import { AuthContext } from '../../contexts/AuthContext'
 import useToast from '../../shared/hooks/useToast'
+import useLoading from '../../shared/hooks/useLoading'
 
 const useStyles = makeStyles(style)
 
@@ -18,15 +20,18 @@ export default function Login({ history }) {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const { currentUser } = useContext(AuthContext)
+  const { loading, showLoading, hideLoading } = useLoading()
   const { error } = useToast()
 
   const handleSubmit = useCallback(
     async ({ email, password }) => {
+      showLoading()
       app
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => history.push('/home'))
         .catch(() => error('Usuário ou senha incorretos.'))
+        .finally(hideLoading)
     },
     [error, history]
   )
@@ -81,11 +86,12 @@ export default function Login({ history }) {
               className={classes.button}
               color="primary"
               data-testid="login-submit"
+              disabled={loading}
               fullWidth
               type="submit"
               variant="contained"
             >
-              Entrar
+              {loading ? <CircularProgress /> : 'Entrar'}
             </Button>
             <Button
               className={classes.button}

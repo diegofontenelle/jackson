@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
@@ -13,14 +14,17 @@ import { makeStyles } from '@material-ui/core'
 import style from './SignInDialog.style'
 import app from '../../firebase'
 import useToast from '../../shared/hooks/useToast'
+import useLoading from '../../shared/hooks/useLoading'
 
 const useStyles = makeStyles(style)
 
 export default function SignInDialog({ handleClose, history, open }) {
   const classes = useStyles()
   const { error } = useToast()
+  const { loading, showLoading, hideLoading } = useLoading()
 
   const handleSubmit = useCallback(async ({ email, password }) => {
+    showLoading()
     app
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -32,6 +36,7 @@ export default function SignInDialog({ handleClose, history, open }) {
           .catch((err) => error(err))
       )
       .catch((err) => error(err))
+      .finally(hideLoading)
   }, [])
 
   return (
@@ -66,7 +71,9 @@ export default function SignInDialog({ handleClose, history, open }) {
               <TextField
                 error={touched.email && Boolean(errors.email)}
                 fullWidth
-                helperText={errors.email}
+                helperText={
+                  touched.email && Boolean(errors.email) ? errors.email : ''
+                }
                 inputProps={{
                   'data-testid': 'signin-email',
                 }}
@@ -80,7 +87,11 @@ export default function SignInDialog({ handleClose, history, open }) {
               <TextField
                 error={touched.password && Boolean(errors.password)}
                 fullWidth
-                helperText={errors.password}
+                helperText={
+                  touched.password && Boolean(errors.password)
+                    ? errors.password
+                    : ''
+                }
                 inputProps={{
                   'data-testid': 'signin-password',
                 }}
@@ -99,7 +110,7 @@ export default function SignInDialog({ handleClose, history, open }) {
                 variant="contained"
                 type="submit"
               >
-                Cadastrar
+                {loading ? <CircularProgress /> : 'Cadastrar'}
               </Button>
               <Button
                 className={classes.button}
