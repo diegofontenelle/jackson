@@ -1,18 +1,18 @@
 version: 2
 jobs:
- build:
-   working_directory: ~/repo
-   machine: true
-   branches:
-    only:
-      - master
-   steps:
-     - checkout
-     - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-     - run:
-        name: build docker image
-        command: |
+  build:
+    working_directory: ~/repo
+    machine: true
+    branches:
+      only:
+        - master
+    steps:
+      - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: build docker image
+          command: |
             echo "deploying to development environment"
-docker build -t jackson:prod .
+            docker build -t jackson:prod .
             docker tag diegofontenelle/jackson:prod
             docker push diegofontenelle/jackson:prod
