@@ -13,6 +13,6 @@ jobs:
         name: build docker image
         command: |
             echo "deploying to development environment"
-docker build -t my-app .
+docker build -t jackson:prod .
             docker tag diegofontenelle/jackson:prod
             docker push diegofontenelle/jackson:prod
